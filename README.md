@@ -1,7 +1,11 @@
 # AntSword - 中国蚁剑
 > 一剑在手，纵横无忧！
 
-**中国蚁剑是一款开源的跨平台网站管理工具，它主要面向于合法授权的渗透测试安全人员以及进行常规操作的网站管理员。任何人不得将其用于非法用途以及盈利等目的，否则后果自行承担！**
+**中国蚁剑是一款开源的跨平台网站管理工具，它主要面向于合法授权的渗透测试安全人员以及进行常规操作的网站管理员。**    
+**任何人不得将其用于非法用途以及盈利等目的，也禁止未经允许私自修改打包进行发布，否则后果自行承担并将追究其相关责任！**
+
+[![node](https://img.shields.io/badge/node-v4.0+-green.svg?style=flat-square)](https://nodejs.org/en/download/)
+[![release](https://img.shields.io/badge/release-v1.1.0-blue.svg?style=flat-square)](https://github.com/antoor/antSword/releases/tag/1.1.0)
 
 ## 设计思想
 > 中国蚁剑采用了[Electron](http://electron.atom.io/)作为外壳，`ES6`作为前端代码编写语言，搭配`Babel`&&`Webpack`进行组件化构建编译，外加`iconv-lite`编码解码模块以及`superagent`数据发送处理模块还有`nedb`数据存储模块，组成了这个年轻而又充满活力的新一代大杀器。
@@ -82,6 +86,9 @@ $ npm start
 虽能满足基本的需求，但因测试有限，仍有部分BUG等待解决。
 
 > 目前版本所有的脚本代码均来源于伟大的**中国菜刀**，本人只是进行了解密以及一些改动，在此感谢作者并向其致敬！致敬每一位为网络安全做出贡献的新老前辈！
+
+## 开源协议
+本项目遵循`MIT`开源协议，详情请查看[LICENSE](LICENSE)。
 
 ## 加入我们
 > 我们欢迎对本工具有兴趣、有追求、有能力改进的人才加入，一起学习探讨深入研究！

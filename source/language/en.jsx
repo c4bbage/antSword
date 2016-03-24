@@ -1,6 +1,6 @@
-// 
+//
 // language::en
-// 
+//
 module.exports = {
   toastr: {
     info: 'Info',
@@ -15,6 +15,7 @@ module.exports = {
       plugin: 'Plugin center',
       settings: 'System setting',
       language: 'Language setting',
+      aproxy: 'Proxy setting',
       update: 'Check update',
       quit: 'Quit'
     },
@@ -40,6 +41,11 @@ module.exports = {
       next: 'Next window',
       prev: 'Prev window',
       close: 'Close window'
+    },
+    debug: {
+      title: 'Debug',
+      restart: 'Restart APP',
+      devtools: 'Developer Tools'
     }
   },
   shellmanager: {
@@ -63,7 +69,8 @@ module.exports = {
       default: 'Default',
       toolbar: {
         add: 'Add',
-        del: 'Del'
+        del: 'Del',
+        rename: 'Rename'
       },
       add: {
         title: 'Add category'
@@ -71,8 +78,15 @@ module.exports = {
       del: {
         title: 'Delete category',
         confirm: 'Are you sure to delete this category?',
-        success: (category) => `Delete category(${category}) success!`,
-        error: (category, err) => `Delete category(${category}failed!<br/>${err}`
+        success: (category) => antSword.noxss(`Delete category(${category}) success!`),
+        error: (category, err) => antSword.noxss(`Delete category(${category}failed!<br/>${err}`)
+      },
+      rename: {
+        title: 'Rename category',
+        disable: 'Prohibited category name!',
+        exists: 'This category name already exists!',
+        success: 'Successful rename!',
+        error: 'Rename category failed!'
       }
     },
     list: {
@@ -99,10 +113,10 @@ module.exports = {
         },
         warning: 'Please enter the full!',
         success: 'Add shell success!',
-        error: (err) => `Add shell failed!<br/>${err}`
+        error: (err) => antSword.noxss(`Add shell failed!<br/>${err}`)
       },
       edit: {
-        title: (url) => `Edit shell(${url})`,
+        title: (url) => antSword.noxss(`Edit shell(${url})`),
         toolbar: {
           save: 'Save',
           clear: 'Clear'
@@ -116,29 +130,29 @@ module.exports = {
         },
         warning: 'Please enter the full!',
         success: 'Update shell success!',
-        error: (err) => `Update shell failed!<br/>${err}`
+        error: (err) => antSword.noxss(`Update shell failed!<br/>${err}`)
       },
       del: {
         title: 'Delete shell',
-        confirm: (len) => `Are you sure to delete ${len} shells?`,
-        success: (len) => `Delete ${len} shells success!`,
-        error: (err) => `Delete failed!<br/>${err}`
+        confirm: (len) => antSword.noxss(`Are you sure to delete ${len} shells?`),
+        success: (len) => antSword.noxss(`Delete ${len} shells success!`),
+        error: (err) => antSword.noxss(`Delete failed!<br/>${err}`)
       },
       move: {
-        success: (num) => `Move ${num}datas success!`,
-        error: (err) => `Move data failed!<br/>${err}`
+        success: (num) => antSword.noxss(`Move ${num}datas success!`),
+        error: (err) => antSword.noxss(`Move data failed!<br/>${err}`)
       },
       clearCache: {
         title: 'Clear cache',
         confirm: 'Are you sure to clear this cache?',
         success: 'Clear cache success!',
-        error: (err) => `Clear cache failed!<br/>${err}`
+        error: (err) => antSword.noxss(`Clear cache failed!<br/>${err}`)
       },
       clearAllCache: {
         title: 'Clear all cache',
         confirm: 'Are you sure to clear all the cache?',
         success: 'Clear all cache success!',
-        error: (err) => `Clear all cache failed!<br/>${err}`
+        error: (err) => antSword.noxss(`Clear all cache failed!<br/>${err}`)
       }
     }
   },
@@ -156,35 +170,35 @@ module.exports = {
     title: 'FileManager',
     delete: {
       title: 'Delete',
-      confirm: (num) => `Are you sure to delete ${typeof(num) === 'number' ? num + ' files' : num} ?`,
-      success: (path) => `Delete file [${path}] success!`,
-      error: (path, err) => `Delete file [${path}] failed!${err ? '<br/>' + err : ''}`
+      confirm: (num) => antSword.noxss(`Are you sure to delete ${typeof(num) === 'number' ? num + ' files' : num} ?`),
+      success: (path) => antSword.noxss(`Delete file [${path}] success!`),
+      error: (path, err) => antSword.noxss(`Delete file [${path}] failed!${err ? '<br/>' + err : ''}`)
     },
     paste: {
-      success: (path) => `Paste file success!<br/>${path}`,
-      error: (path, err) => `Paste file [${path}] failed!${err ? '<br/>' + err : ''}`
+      success: (path) => antSword.noxss(`Paste file success!<br/>${path}`),
+      error: (path, err) => antSword.noxss(`Paste file [${path}] failed!${err ? '<br/>' + err : ''}`)
     },
     rename: {
       title: 'Rename',
       success: 'Rename success!',
-      error: (err) => `Rename failed!${err ? '<br/>' + err : ''}`
+      error: (err) => antSword.noxss(`Rename failed!${err ? '<br/>' + err : ''}`)
     },
     createFolder: {
       title: 'Create Folder',
       value: 'New Folder',
-      success: (path) => `Create folder success!<br/>${path}`,
-      error: (path, err) => `Create folder [${path}] failed!${err ? '<br/>' + err : ''}`
+      success: (path) => antSword.noxss(`Create folder success!<br/>${path}`),
+      error: (path, err) => antSword.noxss(`Create folder [${path}] failed!${err ? '<br/>' + err : ''}`)
     },
     createFile: {
       title: 'Create File',
       value: 'New File.txt',
-      success: (path) => `Create file success!<br/>${path}`,
-      error: (path, err) => `Create file [${path}] failed!${err ? '<br/>' + err : ''}`
+      success: (path) => antSword.noxss(`Create file success!<br/>${path}`),
+      error: (path, err) => antSword.noxss(`Create file [${path}] failed!${err ? '<br/>' + err : ''}`)
     },
     retime: {
       title: 'Retime File',
-      success: (path) => `Retime file success!<br/>${path}`,
-      error: (path, err) => `Retime file [${path}] failed!${err ? '<br/>' + err : ''}`
+      success: (path) => antSword.noxss(`Retime file success!<br/>${path}`),
+      error: (path, err) => antSword.noxss(`Retime file [${path}] failed!${err ? '<br/>' + err : ''}`)
     },
     wget: {
       title: 'Wget File',
@@ -193,18 +207,18 @@ module.exports = {
         name: 'WGET',
         start: 'Start to wget file..',
         success: 'Wget success!',
-        failed: (ret) => `Failed:${ret}`,
-        error: (err) => `Error:${err}`
+        failed: (ret) => antSword.noxss(`Failed:${ret}`),
+        error: (err) => antSword.noxss(`Error:${err}`)
       }
     },
     upload: {
       task: {
         name: 'Upload',
-        failed: (err) => `Failed:${err}`,
-        error: (err) => `Error:${err}`
+        failed: (err) => antSword.noxss(`Failed:${err}`),
+        error: (err) => antSword.noxss(`Error:${err}`)
       },
-      success: (path) => `Upload file success!<br/>${path}`,
-      error: (path, err) => `Upload file [${path}] failed!${err}`,
+      success: (path) => antSword.noxss(`Upload file success!<br/>${path}`),
+      error: (path, err) => antSword.noxss(`Upload file [${path}] failed!${err}`),
     },
     folder: {
       title: 'Folders'
@@ -231,7 +245,7 @@ module.exports = {
       prompt: {
         add: {
           title: 'Add to bookmark',
-          success: (path) => `Add to bookmark success!<br/>${path}`,
+          success: (path) => antSword.noxss(`Add to bookmark success!<br/>${path}`),
         },
         remove: {
           title: 'Remove bookmark',
@@ -271,8 +285,8 @@ module.exports = {
           modify: 'Modify the file time',
           copy: {
             title: 'Copy',
-            warning: (id) => `Already add to clipboard!<br/>${id}`,
-            info: (id) => `Add file to the clipboard.<br/>${id}`
+            warning: (id) => antSword.noxss(`Already add to clipboard!<br/>${id}`),
+            info: (id) => antSword.noxss(`Add file to the clipboard.<br/>${id}`)
           },
           create: {
             title: 'Create',
@@ -283,15 +297,15 @@ module.exports = {
       }
     },
     editor: {
-      title: (path) => `Edit: ${path}`,
+      title: (path) => antSword.noxss(`Edit: ${path}`),
       toolbar: {
         save: 'Save',
         mode: 'Mode',
         encode: 'Encode'
       },
-      loadErr: (err) => `Load file error!<br/>${err}`,
-      success: (path) => `Save the file success!<br/>${path}`,
-      error: (path, err) => `Save the file [${path}] failed!${err}`
+      loadErr: (err) => antSword.noxss(`Load file error!<br/>${err}`),
+      success: (path) => antSword.noxss(`Save the file success!<br/>${path}`),
+      error: (path, err) => antSword.noxss(`Save the file [${path}] failed!${err}`)
     },
     tasks: {
       title: 'Tasks',
@@ -313,10 +327,10 @@ module.exports = {
         cancel: 'Cancel download',
         start: 'Start to download',
         success: 'Download success!',
-        error: (err) => `Error:${err}`
+        error: (err) => antSword.noxss(`Error:${err}`)
       },
-      error: (name, err) => `Download file [${name}]error!<br/>${err}`,
-      success: (name) => `Download file [${name}] success!`
+      error: (name, err) => antSword.noxss(`Download file [${name}]error!<br/>${err}`),
+      success: (name) => antSword.noxss(`Download file [${name}] success!`)
     }
   },
   database: {
@@ -338,10 +352,10 @@ module.exports = {
       title: 'Result',
       warning: 'Execution is completed, but no results return!',
       error: {
-        database: (err) => `Failed to obtain a list of databases!<br/>${err}`,
-        table: (err) => `Get table data failed!<br/>${err}`,
-        column: (err) => `Failed to obtain field list!<br/>${err}`,
-        query: (err) => `Failure to execute SQL!<br/>${err}`,
+        database: (err) => antSword.noxss(`Failed to obtain a list of databases!<br/>${err}`),
+        table: (err) => antSword.noxss(`Get table data failed!<br/>${err}`),
+        column: (err) => antSword.noxss(`Failed to obtain field list!<br/>${err}`),
+        query: (err) => antSword.noxss(`Failure to execute SQL!<br/>${err}`),
         parse: 'Return data format is incorrect!',
         noresult: 'No query results!'
       }
@@ -363,7 +377,7 @@ module.exports = {
         title: 'Delete configuration',
         confirm: 'Determine delete this configuration?',
         success: 'Delete configuration success!',
-        error: (err) => `Delete configuration failed!<br/>${err}`
+        error: (err) => antSword.noxss(`Delete configuration failed!<br/>${err}`)
       }
     }
   },
@@ -392,9 +406,75 @@ module.exports = {
       toolbar: {
         check: 'Check'
       }
+    },
+    aproxy: {
+      title: 'Proxy setting',
+      toolbar: {
+        save: 'Save',
+        test: 'Test connect'
+      },
+      form: {
+        label: 'Configure proxy for access to the Internet',
+        mode:{
+          noproxy: 'Do not use agent',
+          manualproxy: 'Manually set the proxy'
+        },
+        proxy: {
+          protocol: 'Agency agreement',
+          server: 'Proxy server',
+          port: 'Port',
+          username: 'AuthUser',
+          password: 'Password',
+          authtip: 'If there is no authentication if'
+        }
+      },
+      success: 'Save proxy settings successfully!',
+      error: 'Failed to save the proxy settings!',
+      confirm: {
+        content: 'Restart the application to take effect, whether to restart?',
+        title: 'Change proxy settings'
+      },
+      prompt:{
+        title: 'Enter the Test-URL',
+        success: 'Connect to proxy server successfully',
+        error: 'Failed to connect to the proxy server'
+      }
+    }
+  },
+  aproxy: {
+    title: 'Proxy Configuration',
+    toolbar: {
+      save: 'Save',
+      test: 'Test Connection'
+    },
+    form: {
+      label: 'Configuring proxy access to the Internet',
+      mode:{
+        noproxy: 'No Proxy',
+        manualproxy: 'Set the proxy manually'
+      },
+      proxy: {
+        protocol: 'Protocol',
+        server: 'Server',
+        port: 'Port',
+        username: 'Username',
+        password: 'Password',
+        authtip: 'Leave blank if no authentication'
+      }
+    },
+    success: 'Successfully save the Proxy Configuration!',
+    error: 'Failed to save the Proxy Configuration!',
+    confirm: {
+      content: 'Restart the application?',
+      title: 'Proxy Configuration'
+    },
+    prompt:{
+      title: 'Input the target URL',
+      success: 'Successfully connect to the proxy server',
+      error: 'Failed to connect to the proxy server'
     }
   },
   plugin: {
-    error: (err) => `Load plugin center failed!<br/>${err}`
+    error: (err) => antSword.noxss(`Load plugin center failed!<br/>${err}`)
   }
 }

@@ -1,6 +1,6 @@
 //
 // language::zh
-// 
+//
 module.exports = {
   title: '中国蚁剑',
   toastr: {
@@ -16,6 +16,7 @@ module.exports = {
       plugin: '插件中心',
       settings: '系统设置',
       language: '语言设置',
+      aproxy: '代理设置',
       update: '检查更新',
       quit: '退出程序'
     },
@@ -41,6 +42,11 @@ module.exports = {
       next: '下个窗口',
       prev: '上个窗口',
       close: '关闭窗口'
+    },
+    debug: {
+      title: '调试',
+      restart: '重启应用',
+      devtools: '开发者工具'
     }
   },
   shellmanager: {
@@ -64,7 +70,8 @@ module.exports = {
       default: '默认分类',
       toolbar: {
         add: '添加',
-        del: '删除'
+        del: '删除',
+        rename: '重命名'
       },
       add: {
         title: '添加分类'
@@ -72,8 +79,15 @@ module.exports = {
       del: {
         title: '删除分类',
         confirm: '确定删除此分类吗？（数据将清空）',
-        success: (category) => `成功删除分类（${category}）！`,
-        error: (category, err) => `删除分类（${category}）失败！<br/>${err}`
+        success: (category) => antSword.noxss(`成功删除分类（${category}）！`),
+        error: (category, err) => antSword.noxss(`删除分类（${category}）失败！<br/>${err}`)
+      },
+      rename: {
+        title: '重命名分类',
+        disable: '禁止的分类名称！',
+        exists: '此分类名已经存在！',
+        success: '重命名分类成功！',
+        error: '重命名分类失败！'
       }
     },
     list: {
@@ -100,10 +114,10 @@ module.exports = {
         },
         warning: '请输入完整！',
         success: '添加数据成功！',
-        error: (err) => `添加数据失败！<br/>${err}`
+        error: (err) => antSword.noxss(`添加数据失败！<br/>${err}`)
       },
       edit: {
-        title: (url) => `编辑数据（${url}）`,
+        title: (url) => antSword.noxss(`编辑数据（${url}）`),
         toolbar: {
           save: '保存',
           clear: '清空'
@@ -117,29 +131,29 @@ module.exports = {
         },
         warning: '请输入完整！',
         success: '更新数据成功！',
-        error: (err) => `更新数据失败！<br/>${err}`
+        error: (err) => antSword.noxss(`更新数据失败！<br/>${err}`)
       },
       del: {
         title: '删除数据',
-        confirm: (len) => `确定删除选中的${len}条数据吗？`,
-        success: (len) => `成功删除${len}条数据！`,
-        error: (err) => `删除失败！<br/>${err}`
+        confirm: (len) => antSword.noxss(`确定删除选中的${len}条数据吗？`),
+        success: (len) => antSword.noxss(`成功删除${len}条数据！`),
+        error: (err) => antSword.noxss(`删除失败！<br/>${err}`)
       },
       move: {
-        success: (num) => `成功移动${num}条数据！`,
-        error: (err) => `移动数据失败！<br/>${err}`
+        success: (num) => antSword.noxss(`成功移动${num}条数据！`),
+        error: (err) => antSword.noxss(`移动数据失败！<br/>${err}`)
       },
       clearCache: {
         title: '清空缓存',
         confirm: '确定清空此缓存吗？',
         success: '清空缓存完毕！',
-        error: (err) => `清空缓存失败！<br/>${err}`
+        error: (err) => antSword.noxss(`清空缓存失败！<br/>${err}`)
       },
       clearAllCache: {
         title: '清空缓存',
         confirm: '确定清空所有缓存数据吗？',
         success: '清空全部缓存完毕！',
-        error: (err) => `清空全部缓存失败！<br/>${err}`
+        error: (err) => antSword.noxss(`清空全部缓存失败！<br/>${err}`)
       }
     }
   },
@@ -157,35 +171,35 @@ module.exports = {
     title: '文件管理',
     delete: {
       title: '删除文件',
-      confirm: (num) => `你确定要删除 ${typeof(num) === 'number' ? num + ' 个文件' : num} 吗？`,
-      success: (path) => `删除文件成功！<br/>${path}`,
-      error: (path, err) => `删除文件 [${path}] 失败！${err ? '<br/>' + err : ''}`
+      confirm: (num) => antSword.noxss(`你确定要删除 ${typeof(num) === 'number' ? num + ' 个文件' : num} 吗？`),
+      success: (path) => antSword.noxss(`删除文件成功！<br/>${path}`),
+      error: (path, err) => antSword.noxss(`删除文件 [${path}] 失败！${err ? '<br/>' + err : ''}`)
     },
     paste: {
-      success: (path) => `粘贴文件成功！<br/>${path}`,
-      error: (path, err) => `粘贴文件 [${path}] 失败！${err ? '<br/>' + err : ''}`
+      success: (path) => antSword.noxss(`粘贴文件成功！<br/>${path}`),
+      error: (path, err) => antSword.noxss(`粘贴文件 [${path}] 失败！${err ? '<br/>' + err : ''}`)
     },
     rename: {
       title: '重命名',
       success: '重命名文件成功！',
-      error: (err) => `重命名文件失败！${err ? '<br/>' + err : ''}`
+      error: (err) => antSword.noxss(`重命名文件失败！${err ? '<br/>' + err : ''}`)
     },
     createFolder: {
       title: '新建目录',
       value: '新目录',
-      success: (path) => `新建目录成功！<br/>${path}`,
-      error: (path, err) => `新建目录 [${path}] 失败！${err ? '<br/>' + err : ''}`
+      success: (path) => antSword.noxss(`新建目录成功！<br/>${path}`),
+      error: (path, err) => antSword.noxss(`新建目录 [${path}] 失败！${err ? '<br/>' + err : ''}`)
     },
     createFile: {
       title: '新建文件',
       value: '新文件.txt',
-      success: (path) => `新建文件成功！<br/>${path}`,
-      error: (path, err) => `新建文件 [${path}] 失败！${err ? '<br/>' + err : ''}`
+      success: (path) => antSword.noxss(`新建文件成功！<br/>${path}`),
+      error: (path, err) => antSword.noxss(`新建文件 [${path}] 失败！${err ? '<br/>' + err : ''}`)
     },
     retime: {
       title: '更改时间',
-      success: (path) => `更改文件时间成功！<br/>${path}`,
-      error: (path, err) => `更改文件时间 [${path}] 失败！${err ? '<br/>' + err : ''}`
+      success: (path) => antSword.noxss(`更改文件时间成功！<br/>${path}`),
+      error: (path, err) => antSword.noxss(`更改文件时间 [${path}] 失败！${err ? '<br/>' + err : ''}`)
     },
     wget: {
       title: 'Wget下载文件',
@@ -194,18 +208,18 @@ module.exports = {
         name: 'WGET下载',
         start: '开始下载..',
         success: '下载成功！',
-        failed: (ret) => `失败:${ret}`,
-        error: (err) => `错误:${err}`
+        failed: (ret) => antSword.noxss(`失败:${ret}`),
+        error: (err) => antSword.noxss(`错误:${err}`)
       }
     },
     upload: {
       task: {
         name: '上传',
-        failed: (err) => `失败:${err}`,
-        error: (err) => `出错:${err}`
+        failed: (err) => antSword.noxss(`失败:${err}`),
+        error: (err) => antSword.noxss(`出错:${err}`)
       },
-      success: (path) => `上传文件成功！<br/>${path}`,
-      error: (path, err) => `上传文件 [${path}] 失败！${err}`,
+      success: (path) => antSword.noxss(`上传文件成功！<br/>${path}`),
+      error: (path, err) => antSword.noxss(`上传文件 [${path}] 失败！${err}`),
     },
     folder: {
       title: '目录列表'
@@ -232,7 +246,7 @@ module.exports = {
       prompt: {
         add: {
           title: '添加到书签',
-          success: (path) => `添加书签成功！<br/>${path}`,
+          success: (path) => antSword.noxss(`添加书签成功！<br/>${path}`),
         },
         remove: {
           title: '移除书签',
@@ -272,8 +286,8 @@ module.exports = {
           modify: '更改文件时间',
           copy: {
             title: '复制文件',
-            warning: (id) => `已经添加到剪贴板！<br/>${id}`,
-            info: (id) => `添加文件到剪贴板<br/>${id}`
+            warning: (id) => antSword.noxss(`已经添加到剪贴板！<br/>${id}`),
+            info: (id) => antSword.noxss(`添加文件到剪贴板<br/>${id}`)
           },
           create: {
             title: '新建',
@@ -284,15 +298,15 @@ module.exports = {
       }
     },
     editor: {
-      title: (path) => `编辑: ${path}`,
+      title: (path) => antSword.noxss(`编辑: ${path}`),
       toolbar: {
         save: '保存',
         mode: '高亮',
         encode: '编码'
       },
-      loadErr: (err) => `加载文件出错！<br/>${err}`,
-      success: (path) => `保存文件成功！<br/>${path}`,
-      error: (path, err) => `保存文件 [${path}] 失败！${err}`
+      loadErr: (err) => antSword.noxss(`加载文件出错！<br/>${err}`),
+      success: (path) => antSword.noxss(`保存文件成功！<br/>${path}`),
+      error: (path, err) => antSword.noxss(`保存文件 [${path}] 失败！${err}`)
     },
     tasks: {
       title: '任务列表',
@@ -314,10 +328,10 @@ module.exports = {
         cancel: '取消下载',
         start: '开始下载',
         success: '下载成功',
-        error: (err) => `出错:${err}`
+        error: (err) => antSword.noxss(`出错:${err}`)
       },
-      error: (name, err) => `下载文件[${name}]出错！<br/>${err}`,
-      success: (name) => `下载文件[${name}]成功！`
+      error: (name, err) => antSword.noxss(`下载文件[${name}]出错！<br/>${err}`),
+      success: (name) => antSword.noxss(`下载文件[${name}]成功！`)
     }
   },
   database: {
@@ -339,10 +353,10 @@ module.exports = {
       title: '执行结果',
       warning: '操作完毕，但没有结果返回！',
       error: {
-        database: (err) => `获取数据库列表失败！<br/>${err}`,
-        table: (err) => `获取表数据失败！<br/>${err}`,
-        column: (err) => `获取字段列表失败！<br/>${err}`,
-        query: (err) => `执行SQL失败！<br/>${err}`,
+        database: (err) => antSword.noxss(`获取数据库列表失败！<br/>${err}`),
+        table: (err) => antSword.noxss(`获取表数据失败！<br/>${err}`),
+        column: (err) => antSword.noxss(`获取字段列表失败！<br/>${err}`),
+        query: (err) => antSword.noxss(`执行SQL失败！<br/>${err}`),
         parse: '返回数据格式不正确！',
         noresult: '没有查询结果！'
       }
@@ -364,7 +378,7 @@ module.exports = {
         title: '删除配置',
         confirm: '确定删除此配置吗？',
         success: '删除配置成功！',
-        error: (err) => `删除配置失败！<br/>${err}`
+        error: (err) => antSword.noxss(`删除配置失败！<br/>${err}`)
       }
     }
   },
@@ -393,9 +407,42 @@ module.exports = {
       toolbar: {
         check: '检查'
       }
+    },
+    aproxy: {
+      title: '代理设置',
+      toolbar: {
+        save: '保存',
+        test: '测试连接'
+      },
+      form: {
+        label: '配置访问互联网的代理',
+        mode:{
+          noproxy: '不使用代理',
+          manualproxy: '手动设置代理'
+        },
+        proxy: {
+          protocol: '代理协议',
+          server: '代理服务器',
+          port: '端口',
+          username: '用户名',
+          password: '密码',
+          authtip: '如果无认证方式请留空'
+        }
+      },
+      success: '保存代理设置成功！',
+      error: '保存代理设置失败！',
+      confirm: {
+        content: '重启应用生效，是否重启？',
+        title: '更改代理设置'
+      },
+      prompt:{
+        title: '输入测试的 URL',
+        success: '连接到代理服务器成功',
+        error: '连接到代理服务器失败'
+      }
     }
   },
   plugin: {
-    error: (err) => `加载插件中心失败！<br/>${err}`
+    error: (err) => antSword.noxss(`加载插件中心失败！<br/>${err}`)
   }
 }

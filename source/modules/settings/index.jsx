@@ -1,16 +1,17 @@
-// 
+//
 // 设置模块
-// 
+//
 
 import About from './about';
 import Update from './update';
 import Language from './language';
+import AProxy from './aproxy'
 
 class Settings {
 
   constructor() {
     antSword['menubar'].reg('settings', this::this.open);
-    ['about', 'update', 'language'].map((_) => {
+    ['about', 'update', 'language', 'aproxy'].map((_) => {
       antSword['menubar'].reg(`settings-${_}`, this.setActive.bind(this, _));
     });
   }
@@ -35,6 +36,7 @@ class Settings {
     new About(sidebar);
     new Language(sidebar);
     new Update(sidebar);
+    new AProxy(sidebar);
 
     this.cell = cell;
     this.sidebar = sidebar;
