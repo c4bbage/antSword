@@ -1,6 +1,6 @@
-// 
+//
 // 文件管理 模块
-// 
+//
 
 const LANG_T = antSword['language']['toastr'];
 const LANG = antSword['language']['filemanager']['files'];
@@ -189,11 +189,12 @@ class Files {
       ${LANG['grid']['header']['size']},
       ${LANG['grid']['header']['attr']}
     `);
-    grid.setColTypes("ro,ro,ro,ro,ro"); 
+    grid.setColTypes("ro,ro,ro,ro,ro");
     grid.setColSorting('str,str,str,str,str');
     grid.setInitWidths("40,*,150,100,100");
     grid.setColAlign("center,left,left,right,center");
     grid.enableMultiselect(true);
+    // grid.enableDragAndDrop(true);
     // grid.enableMultiline(true);
 
     // grid右键
@@ -346,12 +347,14 @@ class Files {
       bmenu.hide();
     });
 
-    // 双击::列出数据&&查看/编辑/下载文件(支持查看程序(png|jpg|gif..)则查看
-    //支持编辑文件(php,js,txt..)则启动编辑器，如果是二进制或压缩等文件(exe,dll,zip,rar..)则下载)
+    // 双击文件
+    // :如果size < 100kb，则进行编辑，否则进行下载
     grid.attachEvent('onRowDblClicked', (id, lid, event) => {
       const fname = grid.getRowAttribute(id, 'fname');
+      const fsize = grid.getRowAttribute(id, 'fsize');
       if (!fname.endsWith('/')) {
-        // grid.callEvent('onRightClick', [id, lid, event]);
+        // 双击编辑size < 100kb 文件
+        fsize <= 100 * 1024 ? manager.editFile(fname) : manager.downloadFile(fname, fsize);
       }else{
         self.gotoPath(fname);
       }
@@ -366,6 +369,23 @@ class Files {
 
     // 剪贴板
     this.Clipboard = {};
+
+    // 文件拖拽上传
+    $(this.cell.cell).on({
+      dragleave: (e) => { e.preventDefault() },
+      drop: (e) => {
+        e.preventDefault();
+        let filePaths = [];
+        let files = e.originalEvent['dataTransfer']['files'] || {};
+        for (let i = 0; i < files.length; i++) {
+          let f = files.item(i);
+          filePaths.push(f['path']);
+        }
+        this.manager.uploadFile(filePaths);
+      },
+      dragenter: (e) => { e.preventDefault() },
+      dragover: (e) => { e.preventDefault() }
+    });
   }
 
   // 刷新当前目录
@@ -411,6 +431,8 @@ class Files {
         id: _id,
         fname: file['name'],
         fsize: parseInt(file['size']),
+        // 如果是可执行文件（exe、dll..），则设置为红色字体
+        style: /\.exe$|\.dll$|\.bat$|\.sh$|\.com$/.test(file['name']) ? 'color:red' : '',
         data: [
           self.fileIcon(file['name']),
           antSword.noxss(file['name'].replace(/\/$/, '')),

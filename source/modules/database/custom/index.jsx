@@ -1,7 +1,7 @@
-// 
+//
 // 数据库驱动::ASP
 // 支持数据库:access,sqlserver,mysql
-// 
+//
 
 class ASP {
 
@@ -9,9 +9,9 @@ class ASP {
     this.opt = opt;
     this.core = this.opt.core;
     this.manager = this.opt.super;
-    // 
+    //
     // * 数据库驱动列表
-    // 
+    //
     this.conns = {
       'mysql': 'com.mysql.jdbc.Driver\r\njdbc:mysql://localhost/test?user=root&password=123456',
       'sqlserver': 'com.microsoft.sqlserver.jdbc.SQLServerDriver\r\njdbc:sqlserver://127.0.0.1:1433;databaseName=test;user=sa;password=123456',
@@ -71,10 +71,11 @@ class ASP {
         // 生成查询SQL语句
         case 'column':
           let _co = arr[1].split(':');
+          const db = new Buffer(_co[1], 'base64').toString();
           const table = new Buffer(_co[2], 'base64').toString();
           const column = new Buffer(_co[3], 'base64').toString();
 
-          const sql = `SELECT TOP 20 [${column}] FROM [${table}] ORDER BY 1 DESC;`;
+          const sql = `SELECT ${column} FROM ${db}.${table} ORDER BY 1 DESC;`;
           this.manager.query.editor.session.setValue(sql);
           break;
       }
@@ -88,13 +89,13 @@ class ASP {
         {
           text: '添加配置',
           icon: 'fa fa-plus-circle',
-          action: this::this.addConf
+          action: this.addConf.bind(this)
         }, {
           divider: true
         }, {
           text: '删除配置',
           icon: 'fa fa-remove',
-          action: this::this.delConf
+          action: this.delConf.bind(this)
         }
       ], event);
     });
@@ -249,12 +250,14 @@ class ASP {
       _id: this.manager.opt['_id'],
       id: id
     });
-    this.core[`database_${conf['type']}`].show_databases(
-    {
-      conn: conf['conn'],
-      encode: this.manager.opt.encode,
-      dbname: ['access', 'microsoft_jet_oledb_4_0'].indexOf(conf['type']) > -1 ? conf['conn'].match(/[\w]+.mdb$/) : 'database'
-    }, (ret) => {
+    this.core.request(
+      this.core[`database_${conf['type']}`].show_databases({
+        conn: conf['conn'],
+        encode: this.manager.opt.encode,
+        db: ['access', 'microsoft_jet_oledb_4_0'].indexOf(conf['type']) > -1 ? conf['conn'].match(/[\w]+.mdb$/) : 'database'
+      })
+    ).then((res) => {
+      let ret = res['text'];
       const arr = ret.split('\t');
       if (arr.length === 1 && ret === '') {
         toastr.warning('执行完毕，没有结果返回')
@@ -275,7 +278,7 @@ class ASP {
           this.manager.list.imgs[1]);
       });
       this.manager.list.layout.progressOff();
-    }, (err) => {
+    }).catch((err) => {
       toastr.error('获取数据库列表失败！' + err['status'] || JSON.stringify(err), 'ERROR');
       this.manager.list.layout.progressOff();
     });
@@ -289,12 +292,16 @@ class ASP {
       _id: this.manager.opt['_id'],
       id: id
     });
-    this.core[`database_${conf['type']}`].show_tables(
-    {
-      conn: conf['conn'],
-      encode: this.manager.opt.encode,
-      dbname: db
-    }, (ret) => {
+
+    this.core.request(
+      this.core[`database_${conf['type']}`].show_tables(
+      {
+        conn: conf['conn'],
+        encode: this.manager.opt.encode,
+        db: db
+      })
+    ).then((res) => {
+      let ret = res['text'];
       const arr = ret.split('\t');
       const _db = new Buffer(db).toString('base64');
       // 删除子节点
@@ -325,12 +332,17 @@ class ASP {
       _id: this.manager.opt['_id'],
       id: id
     });
-    this.core[`database_${conf['type']}`].show_columns(
-    {
-      conn: conf['conn'],
-      encode: this.manager.opt.encode,
-      table: conf['type'] === 'oracle' ? `SELECT * FROM (SELECT A.*,ROWNUM N FROM ${table} A) WHERE N=1` : `SELECT TOP 1 * FROM ${table}`
-    }, (ret) => {
+
+    this.core.request(
+      this.core[`database_${conf['type']}`].show_columns(
+      {
+        conn: conf['conn'],
+        encode: this.manager.opt.encode,
+        db: db,
+        table: table
+      })
+    ).then((res) => {
+      let ret = res['text'];
       const arr = ret.split('\t');
       const _db = new Buffer(db).toString('base64');
       const _table = new Buffer(table).toString('base64');
@@ -352,8 +364,8 @@ class ASP {
       // 更新编辑器SQL语句
       this.manager.query.editor.session.setValue(
         conf['type'] === 'oracle'
-        ? `SELECT * FROM (SELECT A.*,ROWNUM N FROM ${table} A ORDER BY 1 DESC) WHERE N>0 AND N<=20`
-        : `SELECT TOP 20 * FROM ${table} ORDER BY 1 DESC;`);
+        ? `SELECT * FROM (SELECT A.*,ROWNUM N FROM ${db}.${table} A ORDER BY 1 DESC) WHERE N>0 AND N<=20`
+        : `SELECT * FROM ${db}.${table} ORDER BY 1 DESC LIMIT 0,20;`);
       this.manager.list.layout.progressOff();
     });
   }
@@ -361,15 +373,19 @@ class ASP {
   // 执行SQL
   execSQL(sql) {
     this.manager.query.layout.progressOn();
-    this.core[`database_${this.dbconf['type']}`].query({
-      conn: this.dbconf['conn'],
-      encode: this.manager.opt.encode,
-      sql: sql
-    }, (ret) => {
+
+    this.core.request(
+      this.core[`database_${this.dbconf['type']}`].query({
+        conn: this.dbconf['conn'],
+        encode: this.manager.opt.encode,
+        sql: sql
+      })
+    ).then((res) => {
+      let ret = res['text'];
       // 更新执行结果
       this.updateResult(ret);
       this.manager.query.layout.progressOff();
-    }, (err) => {
+    }).catch((err) => {
       console.error(err);
     });
   }
@@ -439,7 +455,7 @@ class ASP {
   // 禁用SQL编辑框
   disableEditor() {
     ['exec', 'clear'].map(
-      this.manager.query.toolbar::this.manager.query.toolbar.disableItem
+      this.manager.query.toolbar.disableItem.bind(this.manager.query.toolbar)
     );
     this.manager.query.editor.setReadOnly(true);
   }
@@ -447,7 +463,7 @@ class ASP {
   // 启用SQL编辑框
   enableEditor() {
     ['exec', 'clear'].map(
-      this.manager.query.toolbar::this.manager.query.toolbar.enableItem
+      this.manager.query.toolbar.enableItem.bind(this.manager.query.toolbar)
     );
     this.manager.query.editor.setReadOnly(false);
   }

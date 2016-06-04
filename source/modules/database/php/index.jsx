@@ -1,7 +1,7 @@
-// 
+//
 // 数据库驱动::PHP
 // 支持数据库:mysql,mssql,oracle,informix
-// 
+//
 
 const LANG = antSword['language']['database'];
 const LANG_T = antSword['language']['toastr'];
@@ -84,13 +84,13 @@ class PHP {
         {
           text: LANG['list']['menu']['add'],
           icon: 'fa fa-plus-circle',
-          action: this::this.addConf
+          action: this.addConf.bind(this)
         }, {
           divider: true
         }, {
           text: LANG['list']['menu']['del'],
           icon: 'fa fa-remove',
-          action: this::this.delConf
+          action: this.delConf.bind(this)
         }
       ], event);
     });
@@ -172,6 +172,22 @@ class PHP {
             })() }
 
           ] },
+          { text: 'MYSQLI', value: 'mysqli', list: [
+
+            { type: 'settings', position: 'label-left', offsetLeft: 70, labelWidth: 90, inputWidth: 150 },
+            { type: 'label', label: LANG['form']['encode'] },
+            { type: 'combo', label: '', name: 'encode', options: (() => {
+              let ret = [];
+              ['utf8', 'big5', 'dec8', 'cp850', 'hp8', 'koi8r', 'latin1', 'latin2', 'ascii', 'euckr', 'gb2312', 'gbk'].map((_) => {
+                ret.push({
+                  text: _,
+                  value: _
+                });
+              })
+              return ret;
+            })() }
+
+          ] },
           { text: 'MSSQL', value: 'mssql' },
           { text: 'ORACLE', value: 'oracle' },
           { text: 'INFORMIX', value: 'informix' }
@@ -186,6 +202,7 @@ class PHP {
       if (_ !== 'type') { return };
       switch(id) {
         case 'mysql':
+        case 'mysqli':
           form.setFormData({
             user: 'root',
             passwd: ''
@@ -271,12 +288,14 @@ class PHP {
       _id: this.manager.opt['_id'],
       id: id
     });
-    this.core[`database_${conf['type']}`].show_databases(
-    {
-      host: conf['host'],
-      user: conf['user'],
-      passwd: conf['passwd']
-    }, (ret) => {
+    this.core.request(
+      this.core[`database_${conf['type']}`].show_databases({
+        host: conf['host'],
+        user: conf['user'],
+        passwd: conf['passwd']
+      })
+    ).then((res) => {
+      let ret = res['text'];
       const arr = ret.split('\t');
       if (arr.length === 1 && ret === '') {
         toastr.warning(LANG['result']['warning'], LANG_T['warning']);
@@ -297,7 +316,7 @@ class PHP {
           this.manager.list.imgs[1]);
       });
       this.manager.list.layout.progressOff();
-    }, (err) => {
+    }).catch((err) => {
       toastr.error(LANG['result']['error']['database'](err['status'] || JSON.stringify(err)), LANG_T['error']);
       this.manager.list.layout.progressOff();
     });
@@ -311,13 +330,16 @@ class PHP {
       _id: this.manager.opt['_id'],
       id: id
     });
-    this.core[`database_${conf['type']}`].show_tables(
-    {
-      host: conf['host'],
-      user: conf['user'],
-      passwd: conf['passwd'],
-      db: db
-    }, (ret) => {
+
+    this.core.request(
+      this.core[`database_${conf['type']}`].show_tables({
+        host: conf['host'],
+        user: conf['user'],
+        passwd: conf['passwd'],
+        db: db
+      })
+    ).then((res) => {
+      let ret = res['text'];
       const arr = ret.split('\t');
       const _db = new Buffer(db).toString('base64');
       // 删除子节点
@@ -337,7 +359,7 @@ class PHP {
         );
       });
       this.manager.list.layout.progressOff();
-    }, (err) => {
+    }).catch((err) => {
       toastr.error(LANG['result']['error']['table'](err['status'] || JSON.stringify(err)), LANG_T['error']);
       this.manager.list.layout.progressOff();
     });
@@ -351,14 +373,17 @@ class PHP {
       _id: this.manager.opt['_id'],
       id: id
     });
-    this.core[`database_${conf['type']}`].show_columns(
-    {
-      host: conf['host'],
-      user: conf['user'],
-      passwd: conf['passwd'],
-      db: db,
-      table: table
-    }, (ret) => {
+
+    this.core.request(
+      this.core[`database_${conf['type']}`].show_columns({
+        host: conf['host'],
+        user: conf['user'],
+        passwd: conf['passwd'],
+        db: db,
+        table: table
+      })
+    ).then((res) => {
+      let ret = res['text'];
       const arr = ret.split('\t');
       const _db = new Buffer(db).toString('base64');
       const _table = new Buffer(table).toString('base64');
@@ -380,7 +405,7 @@ class PHP {
       // 更新编辑器SQL语句
       this.manager.query.editor.session.setValue(`SELECT * FROM \`${table}\` ORDER BY 1 DESC LIMIT 0,20;`);
       this.manager.list.layout.progressOff();
-    }, (err) => {
+    }).catch((err) => {
       toastr.error(LANG['result']['error']['column'](err['status'] || JSON.stringify(err)), LANG_T['error']);
       this.manager.list.layout.progressOff();
     });
@@ -389,18 +414,22 @@ class PHP {
   // 执行SQL
   execSQL(sql) {
     this.manager.query.layout.progressOn();
-    this.core[`database_${this.dbconf['type']}`].query({
-      host: this.dbconf['host'],
-      user: this.dbconf['user'],
-      passwd: this.dbconf['passwd'],
-      db: this.dbconf['database'],
-      sql: sql,
-      encode: this.dbconf['encode'] || 'utf8'
-    }, (ret) => {
+
+    this.core.request(
+      this.core[`database_${this.dbconf['type']}`].query({
+        host: this.dbconf['host'],
+        user: this.dbconf['user'],
+        passwd: this.dbconf['passwd'],
+        db: this.dbconf['database'],
+        sql: sql,
+        encode: this.dbconf['encode'] || 'utf8'
+      })
+    ).then((res) => {
+      let ret = res['text'];
       // 更新执行结果
       this.updateResult(ret);
       this.manager.query.layout.progressOff();
-    }, (err) => {
+    }).catch((err) => {
       toastr.error(LANG['result']['error']['query'](err['status'] || JSON.stringify(err)), LANG_T['error']);
       this.manager.query.layout.progressOff();
     });
@@ -469,7 +498,7 @@ class PHP {
   // 禁用SQL编辑框
   disableEditor() {
     ['exec', 'clear'].map(
-      this.manager.query.toolbar::this.manager.query.toolbar.disableItem
+      this.manager.query.toolbar.disableItem.bind(this.manager.query.toolbar)
     );
     this.manager.query.editor.setReadOnly(true);
   }
@@ -477,7 +506,7 @@ class PHP {
   // 启用SQL编辑框
   enableEditor() {
     ['exec', 'clear'].map(
-      this.manager.query.toolbar::this.manager.query.toolbar.enableItem
+      this.manager.query.toolbar.enableItem.bind(this.manager.query.toolbar)
     );
     this.manager.query.editor.setReadOnly(false);
   }
